@@ -3,8 +3,8 @@
   <h2 class='text-center mt-5'>Todo App</h2>
 
   <div class='d-flex'>
-  <input type='text' class='form-control' placeholder='Enter task'>
-  <button class='btn btn-warning rounded-0'>Add Task</button>
+  <input v-model='task' type='text' class='form-control' placeholder='Enter task'>
+  <button @click='submitTask' class='btn btn-warning rounded-0'>Add Task</button>
   </div>
 
 
@@ -22,10 +22,10 @@
       <th>{{task.name}}</th>
       <td>{{task.status}}</td>
             <td><div class='text-center'>
-              <span class="fa fa-trash pointer"></span>
-            </div></td>
-            <td><div class='text-center'>
               <span class="fa fa-pen pointer"></span>
+            </div></td>
+            <td><div class='text-center' @click='deleteTask(index)'>
+              <span class="fa fa-trash pointer"></span>
             </div></td>
     </tr>
   </tbody>
@@ -46,6 +46,7 @@ export default {
 
     data(){
         return {
+            task:'',
             tasks: [
                 {name: 'ankush want to give tes',
                 status:'to-do'},
@@ -53,7 +54,22 @@ export default {
                 status:'in-progress'}
             ]
         }
-    }
+    },
+
+    methods: {
+        submitTask(){
+
+            if(this.task.length === 0) return;
+
+            this.tasks.push({
+                name: this.task,
+                status: 'to-do'
+            })
+
+        },
+
+    },
+
 
 }
 </script>
