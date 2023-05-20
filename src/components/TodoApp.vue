@@ -21,7 +21,7 @@
     <tr v-for='(task,index) in tasks' :key='index'>
       <th>{{task.name}}</th>
       <td>{{task.status}}</td>
-            <td><div class='text-center'>
+            <td><div class='text-center' @click='editTask(index)'>
               <span class="fa fa-pen pointer"></span>
             </div></td>
             <td><div class='text-center' @click='deleteTask(index)'>
@@ -47,8 +47,9 @@ export default {
     data(){
         return {
             task:'',
+            editedTask:null,
             tasks: [
-                {name: 'ankush want to give tes',
+                {name: 'ankush want to give test',
                 status:'to-do'},
                 {name: 'prerana want to give test',
                 status:'in-progress'}
@@ -61,15 +62,28 @@ export default {
 
             if(this.task.length === 0) return;
 
+            if(this.editedTask === null){
+
             this.tasks.push({
                 name: this.task,
                 status: 'to-do'
             })
+            }else{
+                this.tasks[this.editedTask].name = this.task;
+                this.editedTask=null;
+            }
+
+            this.task = ''
 
         },
 
         deleteTask(index){
             this.tasks.splice(index,1)
+        },
+
+        editTask(index){
+            this.task = this.tasks[index].name;
+            this.editedTask=index
         }
     },
 
