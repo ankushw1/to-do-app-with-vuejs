@@ -18,9 +18,9 @@
     </tr>
   </thead>
   <tbody>
-    <tr>
-      <th>mock final</th>
-      <td>To-do</td>
+    <tr v-for='(task,index) in tasks' :key='index'>
+      <th>{{task.name}}</th>
+      <td>{{task.status}}</td>
             <td><div class='text-center'>
               <span class="fa fa-trash pointer"></span>
             </div></td>
@@ -41,8 +41,20 @@
 export default {
     name:'HelloWorld',
     props:{
-        msg:String
+        msg:String,
+    },
+
+    data(){
+        return {
+            tasks: [
+                {name: 'ankush want to give tes',
+                status:'to-do'},
+                {name: 'prerana want to give test',
+                status:'in-progress'}
+            ]
+        }
     }
+
 }
 </script>
 
