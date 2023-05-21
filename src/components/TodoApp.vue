@@ -54,8 +54,6 @@ export default {
             tasks: [
                 {name: 'ankush want to give test',
                 status:'To-do'},
-                {name: 'ankush is very good',
-                status:'In-progress'}
             ]
         }
     },
