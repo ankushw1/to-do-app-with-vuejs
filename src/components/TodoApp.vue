@@ -19,10 +19,12 @@
   </thead>
   <tbody>
     <tr v-for='(task,index) in tasks' :key='index'>
-      <th>{{task.name}}</th>
-      <td>{{task.status}}</td>
+      <th><span :class="{ 'line-through': task.status === 'Finished' }">
+              {{ task.name }}
+            </span></th>
+      <td style='width:120px'><span class='pointer'  @click='statusUpdate(index)'>{{task.status}}</span></td>
             <td><div class='text-center' @click='editTask(index)'>
-              <span class="fa fa-pen pointer"></span>
+              <span  class="fa fa-pen pointer"></span>
             </div></td>
             <td><div class='text-center' @click='deleteTask(index)'>
               <span class="fa fa-trash pointer"></span>
@@ -48,11 +50,12 @@ export default {
         return {
             task:'',
             editedTask:null,
+            availableStatuses: ['To-do','In-progress','Finished'],
             tasks: [
                 {name: 'ankush want to give test',
-                status:'to-do'},
-                {name: 'prerana want to give test',
-                status:'in-progress'}
+                status:'To-do'},
+                {name: 'ankush is very good',
+                status:'In-progress'}
             ]
         }
     },
@@ -79,11 +82,17 @@ export default {
 
         deleteTask(index){
             this.tasks.splice(index,1)
+            alert('To-do task deleted sussessfully!!!')
         },
 
         editTask(index){
             this.task = this.tasks[index].name;
             this.editedTask=index
+        },
+        statusUpdate(index){
+          let newIndex = this.availableStatuses.indexOf(this.tasks[index].status)
+          if(++newIndex > 2) newIndex = 0
+          this.tasks[index].status = this.availableStatuses[newIndex]
         }
     },
 
@@ -92,4 +101,10 @@ export default {
 </script>
 
 <style scoped>
+.pointer{
+  cursor:pointer;
+}
+.line-through {
+  text-decoration: line-through;
+}
 </style>
