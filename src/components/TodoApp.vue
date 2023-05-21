@@ -3,12 +3,7 @@
     <h2 class="text-center mt-5">Todo App</h2>
 
     <div class="d-flex">
-      <input v-model="task" type="text" class="form-control" placeholder="Enter task" />
-      <select v-model="selectedCategory" class="form-control ml-2">
-        <option value="" disabled>Select category</option>
-        <option v-for="category in categories" :value="category" :key="category">{{ category }}</option>
-      </select>
-      <button @click="submitTask" class="btn btn-warning rounded-0">Add Task</button>
+      <AddTodo :categories="categories" :categorizedTasks="categorizedTasks" />
     </div>
 
     <div class="d-flex mt-4">
@@ -49,30 +44,32 @@
         </tr>
       </tbody>
     </table>
+
+    <EditTodo v-if="editedTask !== null" :task="categorizedTasks[selectedCategory][editedTask]" :categories="categories" :categorizedTasks="categorizedTasks" :editedTask="editedTask" @task-updated="taskUpdated" />
+    <DeleteTodo v-if="deletedTask !== null" :task="categorizedTasks[selectedCategory][deletedTask]" :categorizedTasks="categorizedTasks" @task-deleted="taskDeleted" />
   </div>
 </template>
 
-
 <script>
-export default {
-  name: 'HelloWorld',
-  props: {
-    msg: String,
-  },
+import AddTodo from "./Todo/AddTodo.vue";
+import EditTodo from "./Todo/EditTodo.vue";
+import DeleteTodo from "./Todo/DeleteTodo.vue";
 
+export default {
+  name: "TodoApp",
   data() {
     return {
-      task: '',
       selectedCategory: null,
       editedTask: null,
-      availableStatuses: ['To-do', 'In-progress', 'Finished'],
-      categories: ['Personal', 'Business', 'Study'],
+      deletedTask: null,
+      availableStatuses: ["To-do", "In-progress", "Finished"],
+      categories: ["Personal", "Business", "Study"],
       categorizedTasks: {
         Personal: [
           {
-            name: 'ankush wants to give a test',
-            status: 'To-do',
-            category: 'Personal',
+            name: "ankush wants to give a test",
+            status: "To-do",
+            category: "Personal",
           },
         ],
         Business: [],
@@ -80,55 +77,38 @@ export default {
       },
     };
   },
-
   methods: {
-    submitTask() {
-      if (this.task.length === 0 || !this.selectedCategory) return;
-
-      if (this.editedTask === null) {
-        const newTask = {
-          name: this.task,
-          status: 'To-do',
-          category: this.selectedCategory,
-        };
-        this.categorizedTasks[this.selectedCategory].push(newTask);
+    selectCategory(category) {
+      if (this.selectedCategory === category) {
+        this.selectedCategory = null;
       } else {
-        const editedTask = this.categorizedTasks[this.selectedCategory][this.editedTask];
-        editedTask.name = this.task;
-        editedTask.category = this.selectedCategory;
-        this.editedTask = null;
+        this.selectedCategory = category;
       }
-
-      this.task = '';
     },
-
-    deleteTask(task) {
-      const categoryTasks = this.categorizedTasks[task.category];
-      const index = categoryTasks.indexOf(task);
-      categoryTasks.splice(index, 1);
-      alert('To-do task deleted successfully!!!');
-    },
-
     editTask(task) {
-      this.task = task.name;
-      this.selectedCategory = task.category;
-      this.editedTask = this.categorizedTasks[task.category].indexOf(task);
+      const index = this.categorizedTasks[task.category].indexOf(task);
+      this.editedTask = index;
     },
-
+    deleteTask(task) {
+      const index = this.categorizedTasks[task.category].indexOf(task);
+      this.deletedTask = index;
+    },
+    taskUpdated() {
+      this.editedTask = null;
+    },
+    taskDeleted() {
+      this.deletedTask = null;
+      alert("To-do task deleted successfully!!!");
+    },
     statusUpdate(task) {
       const newIndex = this.availableStatuses.indexOf(task.status) + 1;
       task.status = this.availableStatuses[newIndex % this.availableStatuses.length];
     },
-
-  selectCategory(category) {
-  if (this.selectedCategory === category) {
-    this.selectedCategory = '';
-  } else {
-    this.selectedCategory = category;
-  }
-},
-
-
+  },
+  components: {
+    AddTodo,
+    EditTodo,
+    DeleteTodo,
   },
 };
 </script>
